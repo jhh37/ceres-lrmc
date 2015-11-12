@@ -5,6 +5,10 @@ PROJECT(je_ceres_lrmc)
 FIND_PACKAGE(Ceres REQUIRED)
 INCLUDE_DIRECTORIES(${CERES_INCLUDE_DIRS})
 
+# C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
+
 set(SOURCES
     LRMC/main.cpp
     LRMC/je_experiment.cpp

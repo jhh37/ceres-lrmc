@@ -1,0 +1,12 @@
+# Build directory
+build
+
+# Mac cache
+.DS_Store
+
+# Windows XP cache
+Thumbs.db
+
+# Binary files
+*.bin
+
