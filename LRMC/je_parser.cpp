@@ -198,7 +198,7 @@ void outputCommands() {
   std::cout << std::endl;
   
   std::cout << "[ Solver-related ]" << std::endl;
-  std::cout << "-t=<double>, --tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
+  std::cout << "-t=<double>, --func_tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
   std::cout << "-i=<int>, --max_iter=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
   std::cout << "--nu=<double>: Set regularization parameter nu. (default = 0.0)" << std::endl;
   std::cout << "--nproc=<double>: Set the number of CPUs for the solver. (default = 1)" << std::endl;
