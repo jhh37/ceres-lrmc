@@ -39,7 +39,7 @@ void parseOptionsFromArgs(int argc, char* argv[], OPTIONS &options) {
       } else if (argType == "-r" || argType == "--rank") {
         options.r = atoi(arg.c_str());
         // Parse tolerance.
-      } else if (argType == "-t" || argType == "--tol") {
+      } else if (argType == "-t" || argType == "--func_tol") {
         options.tol = std::strtod(arg.c_str(), NULL);
         // Parse the maximum number of iterations.
       } else if (argType == "-i" || argType == "--max_iter") {
