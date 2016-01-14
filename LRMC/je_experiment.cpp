@@ -11,7 +11,6 @@ void runExperiment(OPTIONS options) {
   int n = options.n;                                        // Number of columns
   int r = options.r;                                        // Rank
   int rt = options.r + int(options.USE_PCA);                // Rank of U (rt = r for non-PCA, rt = r + 1 for PCA)
-  int mn = m*n, mr = m*r, nr = n*r;                         // Products of m, n and r
 
   double sqrt_nu = options.sqrt_nu * int(!options.USE_PCA); // Regularization parameter (nu = nu for non-PCA, nu = 0 for PCA)
 
@@ -22,8 +21,7 @@ void runExperiment(OPTIONS options) {
   double* V = new double[n * r * DOUBLE_SIZE];
 
   // Set sample prefix.
-  std::string sampleFolder = "Temp/";
-  std::string samplePrefix = sampleFolder + options.dataset + "_r" + std::to_string(r);
+  std::string samplePrefix = options.folder + "/" + options.dataset + "_r" + std::to_string(r);
 
   // Read matrix from pre-made binary files.
   if (!readDenseMatrix(samplePrefix + "_M.bin", M, m, n)) return;
@@ -164,10 +162,10 @@ void runExperiment(OPTIONS options) {
   std::cout << std::endl;
 
   // Write the output files including the number of iterations.
-  double iters[] = { double(summary.iterations.size() - 1) };
+  double iters_[] = { double(summary.iterations.size() - 1) };
   writeDenseMatrix(samplePrefix + "_U.bin", U, m, rt);
   writeDenseMatrix(samplePrefix + "_V.bin", V, n, r);
-  writeDenseMatrix(samplePrefix + "_iters.bin", iters, 1, 1);
+  writeDenseMatrix(samplePrefix + "_iters.bin", iters_, 1, 1);
 
   // Free manually-allocated memory space.
   delete[] V;

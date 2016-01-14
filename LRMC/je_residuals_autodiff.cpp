@@ -38,7 +38,7 @@ template bool AD_WeightedElementResidual::operator() < double > (double const* c
 
 // Constructor
 AD_RegularizationResidual::AD_RegularizationResidual(double sqrt_of_reg_param, int rank)
-  : sqrt_nu(sqrt_of_reg_param), r(rank) {}
+  : r(rank), sqrt_nu(sqrt_of_reg_param) {}
 
 // Operator
 template <typename T> bool AD_RegularizationResidual::operator() (T const* const* parameters, T* residual) const {

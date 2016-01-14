@@ -20,15 +20,16 @@ struct OPTIONS {
 
   // Declare variables
   std::string dataset = "";            // Dataset name
+  std::string folder = ".";
 
   int m = 0;                      // Number of rows
   int n = 0;                      // Number of columns
   int r = 0;                      // Rank of V
-  int max_iter = 2000;            // Maximum number of iterations
+  int max_iter = 300;            // Maximum number of iterations
   int nproc = 1;                  // Number of CPUs to be used
 
   double sqrt_nu = 0;             // Square root of the regularization parameter
-  double tol = 1e-10;             // Function value tolerance
+  double tol = 1e-9;             // Function value tolerance
 
   bool USE_INNER_ITERS = false;   // Flag for CERES inner iterations
   bool USE_AUTO_DIFF = false;     // Flag for CERES auto-differential cost function
