@@ -1,8 +1,8 @@
-#ifndef _JE_RESIDUALS_AUTODIFF_H_
-#define _JE_RESIDUALS_AUTODIFF_H_
+#ifndef _RESIDUALS_AUTODIFF_H_
+#define _RESIDUALS_AUTODIFF_H_
 
 #include "ceres/ceres.h"
-#include "je_options.h"
+#include "options.h"
 
 /*
  * (AUTO_DIFF) Weighted residual:  f_ij = W_ij .* (M_ij - U_i * V_j')

@@ -1,10 +1,10 @@
-#include "je_experiment.h"
-#include "je_matrix.h"
-#include "je_residuals_analytic.h"
-#include "je_residuals_autodiff.h"
-#include "je_config.h"
+#include "experiment.h"
+#include "matrix.h"
+#include "residuals_analytic.h"
+#include "residuals_autodiff.h"
+#include "config.h"
 
-void runExperiment(OPTIONS options) {
+void runExperiment(options_t options) {
 
   // Declare local variables for frequently-used variables.
   int m = options.m;                                        // Number of rows

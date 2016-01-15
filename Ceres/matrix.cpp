@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "je_matrix.h"
-#include "je_config.h"
+#include "matrix.h"
+#include "config.h"
 
 // Read matrix (in doubles) from a MATLAB column-major binary file in the row-major order.
 bool readDenseMatrix(const std::string filePath, double *matrix, const int nRows, const int nCols)

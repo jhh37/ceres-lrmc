@@ -1,4 +1,4 @@
-#include "je_residuals_autodiff.h"
+#include "residuals_autodiff.h"
 
 /*
  * (AUTODIFF) Weighted residual:  f_ij = W_ij .* (M_ij - U_i * V_j')

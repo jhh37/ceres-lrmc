@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cmath>
 
-#include "je_parser.h"
+#include "parser.h"
 
-void parseOptionsFromArgs(int argc, char* argv[], OPTIONS &options) {
+void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
   
   // If no arguments provided, check for help and then allow user to type them one by one.
   if (argc < 2) {
@@ -125,7 +125,7 @@ void parseOptionsFromArgs(int argc, char* argv[], OPTIONS &options) {
   return;
 }
 
-void parseOptionsManually(OPTIONS &options, bool START_FROM_SCRATCH) {
+void parseOptionsManually(options_t &options, bool START_FROM_SCRATCH) {
   
   // If starting from scratch, reset the options to default.
   if (START_FROM_SCRATCH) { options.reset(); }

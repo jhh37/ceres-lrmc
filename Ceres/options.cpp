@@ -1,20 +1,16 @@
-#include "je_options.h"
+#include "options.h"
 
 /*
  * (STRUCT) OPTIONS: Experiment options and parameters
  */
 
-// Destructor
-OPTIONS::~OPTIONS() {}
+options::options() {}
 
-// Constructors
-OPTIONS::OPTIONS() {}
-
-OPTIONS::OPTIONS(std::string dataset, int nRows, int nCols, int rank)
+options::options(std::string dataset, int nRows, int nCols, int rank)
 : m(nRows), n(nCols), r(rank) {}
 
 // Reset function
-void OPTIONS::reset() {
+void options::reset() {
   // Declare variables
   dataset = "";               // Dataset name
   folder = ".";               // Folder name

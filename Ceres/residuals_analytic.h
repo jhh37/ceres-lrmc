@@ -1,8 +1,8 @@
-#ifndef _JE_RESIDUALS_ANALYTIC_H_
-#define _JE_RESIDUALS_ANALYTIC_H_
+#ifndef _RESIDUALS_ANALYTIC_H_
+#define _RESIDUALS_ANALYTIC_H_
 
 #include "ceres/ceres.h"
-#include "je_options.h"
+#include "options.h"
 
 /*
  * (ANALYTIC) Weighted element residual:  f_ij = W_ij .* (M_ij - U_i * V_j')

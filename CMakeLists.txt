@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-PROJECT(je_ceres_lrmc)
+PROJECT(lrmf_ceres)
 
 FIND_PACKAGE(Ceres REQUIRED)
 INCLUDE_DIRECTORIES(${CERES_INCLUDE_DIRS})
@@ -10,15 +10,15 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 set(SOURCES
-    LRMC/main.cpp
-    LRMC/je_experiment.cpp
-    LRMC/je_matrix.cpp
-    LRMC/je_residuals_analytic.cpp
-    LRMC/je_residuals_autodiff.cpp
-    LRMC/je_options.cpp
-    LRMC/je_parser.cpp
+    Ceres/main.cpp
+    Ceres/experiment.cpp
+    Ceres/matrix.cpp
+    Ceres/residuals_analytic.cpp
+    Ceres/residuals_autodiff.cpp
+    Ceres/options.cpp
+    Ceres/parser.cpp
 )
 
 # LRMC
-ADD_EXECUTABLE(je_ceres_lrmc ${SOURCES})
-TARGET_LINK_LIBRARIES(je_ceres_lrmc ${CERES_LIBRARIES})
+ADD_EXECUTABLE(lrmf_ceres_exec ${SOURCES})
+TARGET_LINK_LIBRARIES(lrmf_ceres_exec ${CERES_LIBRARIES})

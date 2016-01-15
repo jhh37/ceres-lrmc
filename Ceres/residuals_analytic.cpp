@@ -1,4 +1,4 @@
-#include "je_residuals_analytic.h"
+#include "residuals_analytic.h"
 
 /*
  * {ANALYTIC} Weighted residual:  f_ij = W_ij .* (M_ij - U_i * V_j')

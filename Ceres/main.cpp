@@ -3,7 +3,7 @@
  * Je Hyeong Hong
  */
 
-#include "je_all.h"
+#include "_everyheader.h"
 #include "glog/logging.h"
 
 /*
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   google::InitGoogleLogging(argv[0]);
 
   // Declare experiment options variable.
-  OPTIONS opts;
+  options_t opts;
   
   // Parse experiment options from input arguments.
   parseOptionsFromArgs(argc, argv, opts);

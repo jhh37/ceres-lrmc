@@ -1,19 +1,15 @@
-#ifndef _JE_OPTIONS_H_
-#define _JE_OPTIONS_H_
+#ifndef _OPTIONS_H_
+#define _OPTIONS_H_
 
 #include <string>
 
 /*
 * (STRUCT) OPTIONS: Experiment options and parameters
 */
-struct OPTIONS {
+typedef struct options {
 
-  // Destructor
-  ~OPTIONS();
-
-  // Constructor
-  OPTIONS();
-  OPTIONS(std::string dataset, int nRows, int nCols, int rank);
+  options();
+  options(std::string dataset, int nRows, int nCols, int rank);
 
   // Reset function
   void reset();                   // Resets all the values.
@@ -39,6 +35,6 @@ struct OPTIONS {
   bool DEBUG = false;             // Flag for showing debug information
   bool HELP = false;              // Flag for showing whether the experiment options are sufficient.
 
-};
+} options_t;
 
 #endif
