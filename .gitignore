@@ -1,11 +1,7 @@
 # Build directory
 build
-
-# Mac cache
-.DS_Store
-
-# Windows XP cache
-Thumbs.db
+jhh37-build
+awf-build
 
 # Binary files
 *.bin
