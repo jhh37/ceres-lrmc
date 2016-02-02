@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 PROJECT(lrmf_ceres/Users/jhh37/repo/lrmf-ceres-inner/Code/lrmf_ceres/CMakeLists.txt)
 
 # Find Ceres-solver
-FIND_PACKAGE(CERES REQUIRED)
+FIND_PACKAGE(Ceres REQUIRED)
 if (NOT CERES_USES_MINIGLOG)
   FIND_PACKAGE(GFLAGS)
   if (GFLAGS_FOUND)
@@ -26,11 +26,15 @@ set(SOURCES
   Ceres/parser.cpp
 )
 
-# Create the executable.
+# List all the libraries required.
 set(LRMF_CERES_LIBRARIES ${CERES_LIBRARIES})
 if (GFLAGS_FOUND)
 set(LRMF_CERES_LIBRARIES ${LRMF_CERES_LIBRARIES} ${gflags_LIBRARIES})
 endif (GFLAGS_FOUND)
 
+# Create the executable.
 ADD_EXECUTABLE(lrmf_ceres_exec ${SOURCES})
 TARGET_LINK_LIBRARIES(lrmf_ceres_exec ${LRMF_CERES_LIBRARIES})
+
+# Install command
+INSTALL(TARGETS lrmf_ceres_exec DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
