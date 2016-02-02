@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 
-PROJECT(lrmf_ceres/Users/jhh37/repo/lrmf-ceres-inner/Code/lrmf_ceres/CMakeLists.txt)
+PROJECT(lrmf_ceres)
 
 # Find Ceres-solver
 FIND_PACKAGE(Ceres REQUIRED)
