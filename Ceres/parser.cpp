@@ -57,6 +57,10 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         } else {
           options.sqrt_nu = sqrt(std::strtod(arg.c_str(), NULL));
         }
+
+        // Parse whether to use Jacobi scaling in CERES.
+      } else if (argType == "--use-jacobi-scaling") {
+        options.USE_JACOBI_SCALING = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use inner iterations in CERES.
       } else if (argType == "--use-inner-iters") {

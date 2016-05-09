@@ -129,6 +129,9 @@ void runExperiment(options_t options) {
     ce_opts.linear_solver_ordering->AddElementToGroup(&(V[j*r]), int(options.ELIMINATE_U_FIRST));
   }
 
+  // Set whether to use Jacobi scaling.
+  ce_opts.jacobi_scaling = options.USE_JACOBI_SCALING;
+  
   // Set options related to inner iterations.
   ce_opts.use_inner_iterations = options.USE_INNER_ITERS;
 

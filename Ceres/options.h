@@ -27,6 +27,7 @@ typedef struct options {
   double sqrt_nu = 0;             // Square root of the regularization parameter
   double tol = 1e-9;             // Function value tolerance
 
+  bool USE_JACOBI_SCALING = false;// Flag for CERES Jacobi scaling
   bool USE_INNER_ITERS = false;   // Flag for CERES inner iterations
   bool USE_AUTO_DIFF = false;     // Flag for CERES auto-differential cost function
   bool USE_PCA = false;           // Flag for using PCA-mode (M -> (U * V' + t * 1'))
