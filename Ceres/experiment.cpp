@@ -111,7 +111,11 @@ void runExperiment(options_t options) {
   ce_opts.minimizer_progress_to_stdout = options.DISPLAY;
   ce_opts.max_num_iterations = options.max_iter;
   ce_opts.function_tolerance = options.tol;
+  ce_opts.inner_iteration_tolerance = options.tol;
   ce_opts.check_gradients = false;
+  ce_opts.lm_damping_type = ceres::LEVENBERG;
+  ce_opts.lm_damping_update_rule = ceres::TRADITIONAL_RULE;
+  ce_opts.lm_damping_decrease_factor = 10.0;
 
   // Set the number of threads
   ce_opts.num_threads = options.nproc;
