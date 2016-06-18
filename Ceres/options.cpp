@@ -4,32 +4,27 @@
  * (STRUCT) OPTIONS: Experiment options and parameters
  */
 
-options::options() {}
-
-options::options(std::string dataset, int nRows, int nCols, int rank)
-: m(nRows), n(nCols), r(rank) {}
-
 // Reset function
 void options::reset() {
-  // Declare variables
-  dataset = "";               // Dataset name
-  folder = ".";               // Folder name
+  // Name and path of the dataset
+  dataset = "";
+  path = ".";
   
-  m = 0;                      // Number of rows
-  n = 0;                      // Number of columns
-  r = 0;                      // Rank of V
-  max_iter = 300;             // Maximum number of iterations
-  nproc = 1;                  // Number of CPUs to be used
+  num_rows = 0;
+  num_cols = 0;
+  rank = 0;
+  max_eval = 300;             // Maximum number of evaluations
+  num_procs = 1;              // Number of processors to be used
   
-  sqrt_nu = 0;                // Square root of the regularization parameter
-  tol = 1e-9;                 // Function value tolerance
+  sqrt_nu = 0.0;              // Square root of the regularization parameter
+  func_tol = 1.0e-9;          // Function value tolerance
   
-  USE_JACOBI_SCALING = false; // Flag for CERES Jacobi scaling
-  USE_INNER_ITERS = false;    // Flag for CERES inner iterations
-  USE_AUTO_DIFF = false;      // Flag for CERES auto-differential cost function
-  USE_PCA = false;            // Flag for using PCA-mode (M -> (U * V' + t * 1'))
-  DISPLAY = true;             // Flag for displaying the output thoroughly
-  ELIMINATE_U_FIRST = false;  // Flag for deciding the order of elimination
-  DEBUG = false;              // Flag for showing debug information
-  HELP = false;               // Flag for showing whether the experiment options are sufficient.
+  use_jacobi_scaling = false; // Set Jacobi scaling.
+  use_inner_iters = false;    // Set inner iterations.
+  use_auto_diff = false;      // Set auto-differential cost function.
+  use_pca = false;            // Set PCA-mode: M -> U * V' + t * 1'.
+  display = true;             // Turn on/off per-iteration display.
+  eliminate_u_first = false;  // Determine the order of elimination.
+  debug = false;              // Turn on/off debug information.
+  help = false;               // Show help.
 }

@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
   parseOptionsFromArgs(argc, argv, opts);
 
   // If user has not called for help, run the experiment.
-  if (!opts.HELP) {
+  if (!opts.help) {
     runExperiment(opts);
   }
 

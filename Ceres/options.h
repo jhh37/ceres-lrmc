@@ -8,33 +8,49 @@
 */
 typedef struct options {
 
-  options();
-  options(std::string dataset, int nRows, int nCols, int rank);
+  options() : dataset(""),
+              path("."),
+              num_rows(0),
+              num_cols(0),
+              rank(0),
+              max_eval(300),
+              num_procs(1),
+              sqrt_nu(0.0),
+              func_tol(1.0e-9),
+              use_jacobi_scaling(false),
+              use_inner_iters(false),
+              use_auto_diff(false),
+              use_pca(false),
+              display(true),
+              eliminate_u_first(false),
+              debug(false),
+              help(false) {
+  };
 
-  // Reset function
-  void reset();                   // Resets all the values.
+  // Reset parameters.
+  void reset();
 
-  // Declare variables
-  std::string dataset = "";            // Dataset name
-  std::string folder = ".";
+  // Name and path of the dataset
+  std::string dataset = "";
+  std::string path = ".";
 
-  int m = 0;                      // Number of rows
-  int n = 0;                      // Number of columns
-  int r = 0;                      // Rank of V
-  int max_iter = 300;            // Maximum number of iterations
-  int nproc = 1;                  // Number of CPUs to be used
+  int num_rows;
+  int num_cols;
+  int rank;
+  int max_eval;             // Maximum number of evaluations
+  int num_procs;            // Number of processors to be used
 
-  double sqrt_nu = 0;             // Square root of the regularization parameter
-  double tol = 1e-9;             // Function value tolerance
+  double sqrt_nu;           // Square root of the regularization parameter
+  double func_tol;          // Function value tolerance
 
-  bool USE_JACOBI_SCALING = false;// Flag for CERES Jacobi scaling
-  bool USE_INNER_ITERS = false;   // Flag for CERES inner iterations
-  bool USE_AUTO_DIFF = false;     // Flag for CERES auto-differential cost function
-  bool USE_PCA = false;           // Flag for using PCA-mode (M -> (U * V' + t * 1'))
-  bool DISPLAY = true;            // Flag for displaying the output thoroughly
-  bool ELIMINATE_U_FIRST = false; // Flag for deciding the order of elimination
-  bool DEBUG = false;             // Flag for showing debug information
-  bool HELP = false;              // Flag for showing whether the experiment options are sufficient.
+  bool use_jacobi_scaling;  // Set Jacobi scaling.
+  bool use_inner_iters;     // Set inner iterations.
+  bool use_auto_diff;       // Set auto-differential cost function.
+  bool use_pca;             // Set PCA-mode: M -> U * V' + t * 1'.
+  bool display;             // Turn on/off per-iteration display.
+  bool eliminate_u_first;   // Determine the order of elimination.
+  bool debug;               // Turn on/off debug information.
+  bool help;                // Show help.
 
 } options_t;
 

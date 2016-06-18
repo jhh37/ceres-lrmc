@@ -27,30 +27,30 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       // Parse dataset.
       if (argType == "-d" || argType == "--dataset") {
         options.dataset = arg;
-      } else if (argType == "-f" || argType == "--folder") {
-        options.folder = arg;
+      } else if (argType == "-p" || argType == "--path") {
+        options.path = arg;
         // Parse the number of rows.
-      } else if (argType == "-m" || argType == "--rows") {
-        options.m = atoi(arg.c_str());
+      } else if (argType == "-m" || argType == "--num_rows") {
+        options.num_rows = atoi(arg.c_str());
         // Parse the number of columns.
-      } else if (argType == "-n" || argType == "--cols") {
-        options.n = atoi(arg.c_str());
+      } else if (argType == "-n" || argType == "--num_cols") {
+        options.num_cols = atoi(arg.c_str());
         // Parse rank.
       } else if (argType == "-r" || argType == "--rank") {
-        options.r = atoi(arg.c_str());
+        options.rank = atoi(arg.c_str());
         // Parse tolerance.
       } else if (argType == "-t" || argType == "--func_tol") {
-        options.tol = std::strtod(arg.c_str(), NULL);
+        options.func_tol = std::strtod(arg.c_str(), NULL);
         // Parse the maximum number of iterations.
-      } else if (argType == "-i" || argType == "--max_iter") {
-        options.max_iter = atoi(arg.c_str());
+      } else if (argType == "-i" || argType == "--max_eval") {
+        options.max_eval = atoi(arg.c_str());
         // Parse the number of processors used.
-      } else if (argType == "--nproc") {
-        options.nproc = atoi(arg.c_str());
+      } else if (argType == "--num_procs") {
+        options.num_procs = atoi(arg.c_str());
         // Parse the square root of the regularization parameter.
       } else if (argType == "--nu") {
         // If PCA formulation is used, then set nu to 0.
-        if (options.USE_PCA) {
+        if (options.use_pca) {
           options.sqrt_nu = 0.0;
           
           // Otherewise, do the maths.
@@ -59,39 +59,39 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         }
 
         // Parse whether to use Jacobi scaling in CERES.
-      } else if (argType == "--use-jacobi-scaling") {
-        options.USE_JACOBI_SCALING = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_jacobi_scaling") {
+        options.use_jacobi_scaling = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use inner iterations in CERES.
-      } else if (argType == "--use-inner-iters") {
-        options.USE_INNER_ITERS = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_inner_iters") {
+        options.use_inner_iters = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use automatic derivatives in CERES.
-      } else if (argType == "--use-auto-diff") {
-        options.USE_AUTO_DIFF = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_auto_diff") {
+        options.use_auto_diff = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use PCA formulation in CERES.
-      } else if (argType == "--use-pca") {
-        options.USE_PCA = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_pca") {
+        options.use_pca = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // If PCA is used, make the regularization parameter 0.
-        if (options.USE_PCA) { options.sqrt_nu = 0.0; }
+        if (options.use_pca) { options.sqrt_nu = 0.0; }
         
         // Parse whether to display CERES outputs.
       } else if (argType == "--display") {
-        options.DISPLAY = atoi(arg.c_str()) > 0 || (arg == argType);
+        options.display = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to eliminate U first or not
-      } else if (argType == "--eliminate-u-first") {
-        options.ELIMINATE_U_FIRST = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--eliminate_u_first") {
+        options.eliminate_u_first = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to output debug infos.
       } else if (argType == "--debug") {
-        options.DEBUG =  atoi(arg.c_str()) > 0 || (arg == argType);
+        options.debug =  atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Output a list of commands.
       } else if (argType == "/?" || argType == "-h" || argType == "--help") {
-        options.HELP = true;
+        options.help = true;
         outputCommands();
         return;
       }
@@ -101,25 +101,25 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
     parseOptionsManually(options, 0);
     
     // If debug is on, output the input arguments.
-    if (options.DEBUG) {
+    if (options.debug) {
       
       std::cout << std::endl;
       
       std::cout << "---[ PARSED INPUT ARGUMENTS ]---" << std::endl;
       
       std::cout << "1. Dataset: " << options.dataset << std::endl;
-      std::cout << "2. Folder: " << options.folder << std::endl;
-      std::cout << "3. Size: " << options.m << " x " << options.n << std::endl;
-      std::cout << "4. Rank: " << options.r << std::endl;
-      std::cout << "5. Function tolerance: " << options.tol << std::endl;
-      std::cout << "6. Max. no. of iterations: " << options.max_iter << std::endl;
-      std::cout << "7. Number of processors: " << options.nproc << std::endl << std::endl;
+      std::cout << "2. Path: " << options.path << std::endl;
+      std::cout << "3. Size: " << options.num_rows << " x " << options.num_cols << std::endl;
+      std::cout << "4. Rank: " << options.rank << std::endl;
+      std::cout << "5. Function tolerance: " << options.func_tol << std::endl;
+      std::cout << "6. Max. no. of evaluations: " << options.max_eval << std::endl;
+      std::cout << "7. Number of processors: " << options.num_procs << std::endl << std::endl;
       std::cout << "8. Sqrt(nu) = " << options.sqrt_nu << std::endl << std::endl;
-      std::cout << "9. USE_INNER_ITERS: " << options.USE_INNER_ITERS << std::endl;
-      std::cout << "10. USE_AUTO_DIFF: " << options.USE_AUTO_DIFF << std::endl;
-      std::cout << "11. USE_PCA: " << options.USE_PCA << std::endl;
-      std::cout << "12. DISPLAY: " << options.DISPLAY << std::endl;
-      std::cout << "13. ELIMINATE_U_FIRST: " << options.ELIMINATE_U_FIRST << std::endl;
+      std::cout << "9. use_inner_iters: " << options.use_inner_iters << std::endl;
+      std::cout << "10. use_auto_diff: " << options.use_auto_diff << std::endl;
+      std::cout << "11. use_pca: " << options.use_pca << std::endl;
+      std::cout << "12. display: " << options.display << std::endl;
+      std::cout << "13. eliminate_u_first: " << options.eliminate_u_first << std::endl;
       
       std::cout << std::endl;
       
@@ -139,31 +139,31 @@ void parseOptionsManually(options_t &options, bool START_FROM_SCRATCH) {
     std::cin >> options.dataset;
   }
   
-  while (options.m < 1) {
+  while (options.num_rows < 1) {
     std::cout << "Please enter the number of rows (m): ";
-    std::cin >> options.m;
+    std::cin >> options.num_rows;
   }
   
-  while (options.n < 1) {
+  while (options.num_cols < 1) {
     std::cout << "Please enter the number of columns (n): ";
-    std::cin >> options.n;
+    std::cin >> options.num_cols;
   }
   
-  while (options.r < 1) {
+  while (options.rank < 1) {
     std::cout << "Please enter the proposed rank (r): ";
-    std::cin >> options.r;
+    std::cin >> options.rank;
   }
   
   // Only type again the followings if starting from scratch.
   //  if (START_FROM_SCRATCH) {
   //    std::cout << "Please specify the tolerance threshold (default = 1e-10): ";
-  //    std::cin >> options.tol;
+  //    std::cin >> options.func_tol;
   //
   //    std::cout << "Please specify the iteration threshold (default = 2000): ";
-  //    std::cin >> options.max_iter;
+  //    std::cin >> options.num_rowsax_iter;
   //
   //    std::cout << "Please enter the number of CPUs to be used (default = 1): ";
-  //    std::cin >> options.nproc;
+  //    std::cin >> options.num_procs;
   //
   //    std::cout << "Please enter the proposed value of the square root of the regularization parameter (sqrt_nu | default = 0.0): ";
   //    std::cin >> options.sqrt_nu;
@@ -194,7 +194,7 @@ void outputCommands() {
   
   std::cout << "[ Dataset-related ]" << std::endl;
   std::cout << "-d=<string>, --dataset=<string>: Read dataset from <name>_r<rank>_{M, W, U0, V0}.bin." << std::endl;
-  std::cout << "-f=<string>, --folder=<string>: Set the name of the folder." << std::endl;
+  std::cout << "-p=<string>, --path=<string>: Set the path." << std::endl;
   std::cout << "-m=<int>, --rows=<int>: Set the number of rows." << std::endl;
   std::cout << "-n=<int>, --cols=<int>: Set the number of columns." << std::endl;
   std::cout << "-r=<int>, --rank=<int>: Set the proposed rank." << std::endl;
@@ -203,16 +203,16 @@ void outputCommands() {
   
   std::cout << "[ Solver-related ]" << std::endl;
   std::cout << "-t=<double>, --func_tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
-  std::cout << "-i=<int>, --max_iter=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
+  std::cout << "-i=<int>, --max_eval=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
   std::cout << "--nu=<double>: Set regularization parameter nu. (default = 0.0)" << std::endl;
   std::cout << "--nproc=<double>: Set the number of CPUs for the solver. (default = 1)" << std::endl;
   
   std::cout << std::endl;
   
-  std::cout << "--use-inner-iters[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
-  std::cout << "--use-auto-diff[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
-  std::cout << "--use-pca[=<bool>]: Specify whether to use PCA formulation or not. (default = 0)" << std::endl;
-  std::cout << "--eliminate-u-first[=<bool>]: Specify whether to eliminate U first or V first. (default = 0)" << std::endl;
+  std::cout << "--use_inner_iters[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
+  std::cout << "--use_auto_diff[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
+  std::cout << "--use_pca[=<bool>]: Specify whether to use PCA formulation or not. (default = 0)" << std::endl;
+  std::cout << "--eliminate_u_first[=<bool>]: Specify whether to eliminate U first or V first. (default = 0)" << std::endl;
   
   std::cout << std::endl;
   

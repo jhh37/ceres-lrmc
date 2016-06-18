@@ -7,12 +7,12 @@
 void runExperiment(options_t options) {
 
   // Declare local variables for frequently-used variables.
-  int m = options.m;                                        // Number of rows
-  int n = options.n;                                        // Number of columns
-  int r = options.r;                                        // Rank
-  int rt = options.r + int(options.USE_PCA);                // Rank of U (rt = r for non-PCA, rt = r + 1 for PCA)
+  int m = options.num_rows;                                        // Number of rows
+  int n = options.num_cols;                                        // Number of columns
+  int r = options.rank;                                        // Rank
+  int rt = options.rank + int(options.use_pca);                // Rank of U (rt = r for non-PCA, rt = r + 1 for PCA)
 
-  double sqrt_nu = options.sqrt_nu * int(!options.USE_PCA); // Regularization parameter (nu = nu for non-PCA, nu = 0 for PCA)
+  double sqrt_nu = options.sqrt_nu * int(!options.use_pca); // Regularization parameter (nu = nu for non-PCA, nu = 0 for PCA)
 
   // Initialize matrix pointers with adequate size.
   double* M = new double[m * n * DOUBLE_SIZE];
@@ -21,7 +21,7 @@ void runExperiment(options_t options) {
   double* V = new double[n * r * DOUBLE_SIZE];
 
   // Set sample prefix.
-  std::string samplePrefix = options.folder + "/" + options.dataset + "_r" + std::to_string(r);
+  std::string samplePrefix = options.path + "/" + options.dataset + "_r" + std::to_string(r);
 
   // Read matrix from pre-made binary files.
   if (!readDenseMatrix(samplePrefix + "_M.bin", M, m, n)) return;
@@ -41,7 +41,7 @@ void runExperiment(options_t options) {
     problem.AddParameterBlock(&(V[j * r]), r);
   }
 
-  if (options.USE_AUTO_DIFF) {
+  if (options.use_auto_diff) {
 	// Use automatic derivatives
 
     // Declare a dynamic AD residual.
@@ -51,7 +51,7 @@ void runExperiment(options_t options) {
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
         if (W[i*n + j] != 0) {
-          residual = new ceres::DynamicAutoDiffCostFunction<AD_WeightedElementResidual, 4>(new AD_WeightedElementResidual(M[i*n + j], W[i*n + j], r, options.USE_PCA));
+          residual = new ceres::DynamicAutoDiffCostFunction<AD_WeightedElementResidual, 4>(new AD_WeightedElementResidual(M[i*n + j], W[i*n + j], r, options.use_pca));
           residual->AddParameterBlock(rt);
           residual->AddParameterBlock(r);
           residual->SetNumResiduals(1);
@@ -89,7 +89,7 @@ void runExperiment(options_t options) {
     for (int i = 0; i < m; i++)
       for (int j = 0; j < n; j++)
         if (W[i*n + j] != 0)
-          problem.AddResidualBlock(new WeightedElementResidual(M[i*n + j], W[i*n + j], r, options.USE_PCA), NULL, &(U[i*rt]), &(V[j*r]));
+          problem.AddResidualBlock(new WeightedElementResidual(M[i*n + j], W[i*n + j], r, options.use_pca), NULL, &(U[i*rt]), &(V[j*r]));
 
     // Add residuals of the regularization term vec(U) and vec(V).
     if (sqrt_nu > 0) {
@@ -108,18 +108,22 @@ void runExperiment(options_t options) {
 
   // Set CERES solver options.
   ceres::Solver::Options ce_opts;
-  ce_opts.minimizer_progress_to_stdout = options.DISPLAY;
-  ce_opts.max_num_iterations = options.max_iter;
-  ce_opts.function_tolerance = options.tol;
-  ce_opts.inner_iteration_tolerance = options.tol;
+  ce_opts.minimizer_progress_to_stdout = options.display;
+  ce_opts.max_num_iterations = options.max_eval;
+  ce_opts.function_tolerance = options.func_tol;
+  ce_opts.inner_iteration_tolerance = options.func_tol;
   ce_opts.check_gradients = false;
   ce_opts.lm_damping_type = ceres::LEVENBERG;
-  ce_opts.lm_damping_update_rule = ceres::TRADITIONAL_RULE;
-  ce_opts.lm_damping_decrease_factor = 10.0;
+  ce_opts.trust_region_radius_update_type = ceres::TRADITIONAL_UPDATE;
+  ce_opts.use_linear_inner_iterations = true;
+  ce_opts.inner_iteration_type = ceres::RUHE_WEDIN_ALGORITHM_2;
+  ce_opts.use_inner_iterations_for_eliminated_parameters_only = true;
+  ce_opts.use_block_qr_for_inner_iterations = true;
+  ce_opts.initialize_with_inner_iteration = true;
 
   // Set the number of threads
-  ce_opts.num_threads = options.nproc;
-  ce_opts.num_linear_solver_threads = options.nproc;
+  ce_opts.num_threads = options.num_procs;
+  ce_opts.num_linear_solver_threads = options.num_procs;
 
   // Set the solver type and ordering.
   ce_opts.linear_solver_type = ceres::SPARSE_SCHUR;
@@ -127,31 +131,31 @@ void runExperiment(options_t options) {
 
   // Ordering depends on the input ELIMINATE_U_FIRST.
   for (int i = 0; i < m; ++i) {
-    ce_opts.linear_solver_ordering->AddElementToGroup(&(U[i*rt]), int(!options.ELIMINATE_U_FIRST));
+    ce_opts.linear_solver_ordering->AddElementToGroup(&(U[i*rt]), int(!options.eliminate_u_first));
   }
   for (int j = 0; j < n; ++j) {
-    ce_opts.linear_solver_ordering->AddElementToGroup(&(V[j*r]), int(options.ELIMINATE_U_FIRST));
+    ce_opts.linear_solver_ordering->AddElementToGroup(&(V[j*r]), int(options.eliminate_u_first));
   }
 
   // Set whether to use Jacobi scaling.
-  ce_opts.jacobi_scaling = options.USE_JACOBI_SCALING;
+  ce_opts.jacobi_scaling = options.use_jacobi_scaling;
   
   // Set options related to inner iterations.
-  ce_opts.use_inner_iterations = options.USE_INNER_ITERS;
+  ce_opts.use_inner_iterations = options.use_inner_iters;
 
-  if (options.USE_INNER_ITERS)
+  if (options.use_inner_iters)
   {
-    ce_opts.inner_iteration_tolerance = options.tol;
+    ce_opts.inner_iteration_tolerance = options.func_tol;
 
     // Set the inner iteration ordering.
     ce_opts.inner_iteration_ordering.reset(new ceres::ParameterBlockOrdering);
 
     // Ordering depends on the input ELIMINATE_U_FIRST.  
     for (int i = 0; i < m; ++i) {
-      ce_opts.inner_iteration_ordering->AddElementToGroup(&(U[i*rt]), int(!options.ELIMINATE_U_FIRST));
+      ce_opts.inner_iteration_ordering->AddElementToGroup(&(U[i*rt]), int(!options.eliminate_u_first));
     }
     for (int j = 0; j < n; ++j) {
-      ce_opts.inner_iteration_ordering->AddElementToGroup(&(V[j*r]), int(options.ELIMINATE_U_FIRST));
+      ce_opts.inner_iteration_ordering->AddElementToGroup(&(V[j*r]), int(options.eliminate_u_first));
     }
   }
 
@@ -160,7 +164,7 @@ void runExperiment(options_t options) {
   Solve(ce_opts, &problem, &summary);
 
   // Output report.
-  if (options.DISPLAY) {
+  if (options.display) {
     std::cout << summary.FullReport() << std::endl;
   }
   else {
