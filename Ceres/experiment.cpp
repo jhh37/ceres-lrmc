@@ -117,8 +117,8 @@ void runExperiment(options_t options) {
   ce_opts.inner_iteration_tolerance = options.func_tol;
 
   // Set the number of threads
-  ce_opts.num_threads = options.num_procs;
-  ce_opts.num_linear_solver_threads = options.num_procs;
+  ce_opts.num_threads = options.num_threads;
+  ce_opts.num_linear_solver_threads = options.num_threads;
 
   // Set the solver type and ordering.
   ce_opts.linear_solver_type = ceres::SPARSE_SCHUR;

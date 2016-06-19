@@ -44,9 +44,9 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         // Parse the maximum number of iterations.
       } else if (argType == "-i" || argType == "--max_eval") {
         options.max_eval = atoi(arg.c_str());
-        // Parse the number of processors used.
-      } else if (argType == "--num_procs") {
-        options.num_procs = atoi(arg.c_str());
+        // Parse the number of threads used.
+      } else if (argType == "--num_threads") {
+        options.num_threads = atoi(arg.c_str());
         // Parse the square root of the regularization parameter.
       } else if (argType == "--nu") {
         // If PCA formulation is used, then set nu to 0.
@@ -141,7 +141,7 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       std::cout << "4. Rank: " << options.rank << std::endl;
       std::cout << "5. Function tolerance: " << options.func_tol << std::endl;
       std::cout << "6. Max. no. of evaluations: " << options.max_eval << std::endl;
-      std::cout << "7. Number of processors: " << options.num_procs << std::endl << std::endl;
+      std::cout << "7. Number of threads: " << options.num_threads << std::endl << std::endl;
       std::cout << "8. Sqrt(nu) = " << options.sqrt_nu << std::endl << std::endl;
       std::cout << "9. use_inner_iterations: " << options.use_inner_iterations << std::endl;
       std::cout << "10. use_auto_differentiation: " << options.use_auto_differentiation << std::endl;
@@ -230,8 +230,8 @@ void outputCommands() {
   std::cout << "[ Dataset-related ]" << std::endl;
   std::cout << "-d=<string>, --dataset=<string>: Read dataset from <name>_r<rank>_{M, W, U0, V0}.bin." << std::endl;
   std::cout << "-p=<string>, --path=<string>: Set the path." << std::endl;
-  std::cout << "-m=<int>, --rows=<int>: Set the number of rows." << std::endl;
-  std::cout << "-n=<int>, --cols=<int>: Set the number of columns." << std::endl;
+  std::cout << "-m=<int>, --num_rows=<int>: Set the number of rows." << std::endl;
+  std::cout << "-n=<int>, --num_cols=<int>: Set the number of columns." << std::endl;
   std::cout << "-r=<int>, --rank=<int>: Set the proposed rank." << std::endl;
   
   std::cout << std::endl;
@@ -240,7 +240,7 @@ void outputCommands() {
   std::cout << "-t=<double>, --func_tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
   std::cout << "-i=<int>, --max_eval=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
   std::cout << "--nu=<double>: Set regularization parameter nu. (default = 0.0)" << std::endl;
-  std::cout << "--nproc=<double>: Set the number of CPUs for the solver. (default = 1)" << std::endl;
+  std::cout << "--num_threads=<double>: Set the number of threads for the solver. (default = 1)" << std::endl;
   
   std::cout << std::endl;
   

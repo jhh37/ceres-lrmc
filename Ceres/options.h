@@ -14,7 +14,7 @@ typedef struct options {
               num_cols(0),
               rank(0),
               max_eval(300),
-              num_procs(1),
+              num_threads(1),
               sqrt_nu(0.0),
               func_tol(1.0e-9),
               use_jacobi_scaling(false),
@@ -45,7 +45,7 @@ typedef struct options {
   int num_cols;
   int rank;
   int max_eval;             // Maximum number of evaluations
-  int num_procs;            // Number of processors to be used
+  int num_threads;          // Number of processors to be used
 
   double sqrt_nu;           // Square root of the regularization parameter
   double func_tol;          // Function value tolerance
