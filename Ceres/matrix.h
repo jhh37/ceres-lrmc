@@ -3,10 +3,8 @@
 
 #include <string>
 
-void createIdentityMatrix(double *matrix, const int rank);
-void computeHadamardProduct(double *productMatrix, const double *inputMatrixA, const double *inputMatrixB, const int nRows, const int nCols);
-bool readDenseMatrix(const std::string filePath, double *matrix, const int nRows, const int nCols);
-void writeDenseMatrix(const std::string filePath, const double *matrix, const int nRows, const int nCols);
-void showMatrix(const double *matrix, const int nRows, const int nCols);
+bool read_dense_matrix(const std::string file_path, double *matrix, const int num_rows, const int num_cols);
+void write_dense_matrix(const std::string file_path, const double *matrix, const int num_rows, const int num_cols);
+void show_matrix(const double *matrix, const int num_rows, const int num_cols);
 
 #endif

@@ -24,10 +24,10 @@ void runExperiment(options_t options) {
   std::string samplePrefix = options.path + "/" + options.dataset + "_r" + std::to_string(r);
 
   // Read matrix from pre-made binary files.
-  if (!readDenseMatrix(samplePrefix + "_M.bin", M, m, n)) return;
-  else if (!readDenseMatrix(samplePrefix + "_W.bin", W, m, n)) return;
-  else if (!readDenseMatrix(samplePrefix + "_U0.bin", U, m, rt)) return;
-  else if (!readDenseMatrix(samplePrefix + "_V0.bin", V, n, r)) return;
+  if (!read_dense_matrix(samplePrefix + "_M.bin", M, m, n)) return;
+  else if (!read_dense_matrix(samplePrefix + "_W.bin", W, m, n)) return;
+  else if (!read_dense_matrix(samplePrefix + "_U0.bin", U, m, rt)) return;
+  else if (!read_dense_matrix(samplePrefix + "_V0.bin", V, n, r)) return;
 
   // Declare a CERES problem.
   ceres::Problem problem;
@@ -41,7 +41,7 @@ void runExperiment(options_t options) {
     problem.AddParameterBlock(&(V[j * r]), r);
   }
 
-  if (options.use_auto_diff) {
+  if (options.use_auto_differentiation) {
 	// Use automatic derivatives
 
     // Declare a dynamic AD residual.
@@ -106,20 +106,15 @@ void runExperiment(options_t options) {
     }
   }
 
-  // Set CERES solver options.
+  // Existing Ceres options
   ceres::Solver::Options ce_opts;
   ce_opts.minimizer_progress_to_stdout = options.display;
   ce_opts.max_num_iterations = options.max_eval;
   ce_opts.function_tolerance = options.func_tol;
-  ce_opts.inner_iteration_tolerance = options.func_tol;
   ce_opts.check_gradients = false;
-  ce_opts.lm_damping_type = ceres::LEVENBERG;
-  ce_opts.trust_region_radius_update_type = ceres::TRADITIONAL_UPDATE;
-  ce_opts.use_linear_inner_iterations = true;
-  ce_opts.inner_iteration_type = ceres::RUHE_WEDIN_ALGORITHM_2;
-  ce_opts.use_inner_iterations_for_eliminated_parameters_only = true;
-  ce_opts.use_block_qr_for_inner_iterations = true;
-  ce_opts.initialize_with_inner_iteration = true;
+  ce_opts.jacobi_scaling = options.use_jacobi_scaling;
+  ce_opts.use_inner_iterations = options.use_inner_iterations;
+  ce_opts.inner_iteration_tolerance = options.func_tol;
 
   // Set the number of threads
   ce_opts.num_threads = options.num_procs;
@@ -128,6 +123,36 @@ void runExperiment(options_t options) {
   // Set the solver type and ordering.
   ce_opts.linear_solver_type = ceres::SPARSE_SCHUR;
   ce_opts.linear_solver_ordering.reset(new ceres::ParameterBlockOrdering);
+  
+  // New Ceres options
+  if (options.use_levenberg_damping) {
+    ce_opts.lm_damping_type = ceres::LEVENBERG;
+  } else {
+    ce_opts.lm_damping_type = ceres::MARQUARDT;
+  }
+  if (options.use_traditional_damping_update) {
+    ce_opts.trust_region_radius_update_type =
+        ceres::TRADITIONAL_UPDATE;
+  } else {
+    ce_opts.trust_region_radius_update_type =
+        ceres::TRUST_REGION_UPDATE;
+  }
+  if (options.use_rw2_for_inner_iterations) {
+    ce_opts.inner_iteration_type =
+        ceres::RUHE_WEDIN_ALGORITHM_2;
+  } else {
+    ce_opts.inner_iteration_type =
+        ceres::EMBEDDED_POINT_ITERATION;
+  }
+  ce_opts.use_linear_inner_iterations =
+    options.use_linear_inner_iterations;
+  ce_opts.use_inner_iterations_for_eliminated_parameters_only =
+      options.use_inner_iterations_for_v_only;
+  ce_opts.use_block_qr_for_rw2 =
+      options.use_block_qr_for_rw2;
+  ce_opts.initialize_with_inner_iteration =
+      options.initialize_with_inner_iteration;
+
 
   // Ordering depends on the input ELIMINATE_U_FIRST.
   for (int i = 0; i < m; ++i) {
@@ -136,17 +161,9 @@ void runExperiment(options_t options) {
   for (int j = 0; j < n; ++j) {
     ce_opts.linear_solver_ordering->AddElementToGroup(&(V[j*r]), int(options.eliminate_u_first));
   }
-
-  // Set whether to use Jacobi scaling.
-  ce_opts.jacobi_scaling = options.use_jacobi_scaling;
   
-  // Set options related to inner iterations.
-  ce_opts.use_inner_iterations = options.use_inner_iters;
-
-  if (options.use_inner_iters)
+  if (options.use_inner_iterations)
   {
-    ce_opts.inner_iteration_tolerance = options.func_tol;
-
     // Set the inner iteration ordering.
     ce_opts.inner_iteration_ordering.reset(new ceres::ParameterBlockOrdering);
 
@@ -174,9 +191,9 @@ void runExperiment(options_t options) {
 
   // Write the output files including the number of iterations.
   double iters_[] = { double(summary.iterations.size() - 1) };
-  writeDenseMatrix(samplePrefix + "_U.bin", U, m, rt);
-  writeDenseMatrix(samplePrefix + "_V.bin", V, n, r);
-  writeDenseMatrix(samplePrefix + "_iters.bin", iters_, 1, 1);
+  write_dense_matrix(samplePrefix + "_U.bin", U, m, rt);
+  write_dense_matrix(samplePrefix + "_V.bin", V, n, r);
+  write_dense_matrix(samplePrefix + "_iters.bin", iters_, 1, 1);
 
   // Free manually-allocated memory space.
   delete[] V;

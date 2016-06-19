@@ -63,27 +63,55 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         options.use_jacobi_scaling = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use inner iterations in CERES.
-      } else if (argType == "--use_inner_iters") {
-        options.use_inner_iters = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_inner_iterations") {
+        options.use_inner_iterations = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use automatic derivatives in CERES.
-      } else if (argType == "--use_auto_diff") {
-        options.use_auto_diff = atoi(arg.c_str()) > 0 || (arg == argType);
-        
-        // Parse whether to use PCA formulation in CERES.
-      } else if (argType == "--use_pca") {
-        options.use_pca = atoi(arg.c_str()) > 0 || (arg == argType);
-        
-        // If PCA is used, make the regularization parameter 0.
-        if (options.use_pca) { options.sqrt_nu = 0.0; }
-        
-        // Parse whether to display CERES outputs.
-      } else if (argType == "--display") {
-        options.display = atoi(arg.c_str()) > 0 || (arg == argType);
+      } else if (argType == "--use_auto_differentiation") {
+        options.use_auto_differentiation = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to eliminate U first or not
       } else if (argType == "--eliminate_u_first") {
         options.eliminate_u_first = atoi(arg.c_str()) > 0 || (arg == argType);
+        
+        // Use Levenberg damping: lambda * eye(size(JTJ).
+      } else if (argType == "--use_levenberg_damping") {
+        options.use_levenberg_damping =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Use Traditional damping update.
+      } else if (argType == "--use_traditional_damping_update") {
+        options.use_traditional_damping_update =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Use RW2 as the inner iteration strategy.
+      } else if (argType == "--use_rw2_for_inner_iterations") {
+        options.use_rw2_for_inner_iterations =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Use linear RW2/EMP.
+      } else if (argType == "--use_linear_inner_iterations") {
+        options.use_linear_inner_iterations =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Perform inner iterations on V only.
+      } else if (argType == "--use_inner_iterations_for_v_only") {
+        options.use_inner_iterations_for_v_only =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Use Block QR factorization for RW2.
+      } else if (argType == "--use_block_qr_for_rw2") {
+        options.use_block_qr_for_rw2 =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+        // Initialize with inner iteration.
+      } else if (argType == "--initialize_with_inner_iteration") {
+        options.initialize_with_inner_iteration =
+            atoi(arg.c_str()) > 0 || (arg == argType);
+      // Parse whether to use PCA formulation.
+      } else if (argType == "--use_pca") {
+        options.use_pca = atoi(arg.c_str()) > 0 || (arg == argType);
+        
+        // If PCA is used, force the regularization parameter to be 0.
+        if (options.use_pca) { options.sqrt_nu = 0.0; }
+        
+        // Parse whether to display the outputs.
+      } else if (argType == "--display") {
+        options.display = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to output debug infos.
       } else if (argType == "--debug") {
@@ -115,11 +143,18 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       std::cout << "6. Max. no. of evaluations: " << options.max_eval << std::endl;
       std::cout << "7. Number of processors: " << options.num_procs << std::endl << std::endl;
       std::cout << "8. Sqrt(nu) = " << options.sqrt_nu << std::endl << std::endl;
-      std::cout << "9. use_inner_iters: " << options.use_inner_iters << std::endl;
-      std::cout << "10. use_auto_diff: " << options.use_auto_diff << std::endl;
+      std::cout << "9. use_inner_iterations: " << options.use_inner_iterations << std::endl;
+      std::cout << "10. use_auto_differentiation: " << options.use_auto_differentiation << std::endl;
       std::cout << "11. use_pca: " << options.use_pca << std::endl;
-      std::cout << "12. display: " << options.display << std::endl;
-      std::cout << "13. eliminate_u_first: " << options.eliminate_u_first << std::endl;
+      std::cout << "12. eliminate_u_first: " << options.eliminate_u_first << std::endl;
+      std::cout << "13. use_levenberg_damping: " << options.use_levenberg_damping << std::endl;
+      std::cout << "14. use_traditional_damping_update: " << options.use_traditional_damping_update << std::endl;
+      std::cout << "15. use_rw2_for_inner_iterations: " << options.use_rw2_for_inner_iterations << std::endl;
+      std::cout << "16. use_linear_inner_iterations: " << options.use_linear_inner_iterations << std::endl;
+      std::cout << "17. use_inner_iterations_for_v_only: " << options.use_inner_iterations_for_v_only << std::endl;
+      std::cout << "18. use_block_qr_for_rw2: " << options.use_block_qr_for_rw2 << std::endl;
+      std::cout << "19. initialize_with_inner_iteration: " << options.initialize_with_inner_iteration << std::endl;
+      std::cout << "20. display: " << options.display << std::endl;
       
       std::cout << std::endl;
       
@@ -169,10 +204,10 @@ void parseOptionsManually(options_t &options, bool START_FROM_SCRATCH) {
   //    std::cin >> options.sqrt_nu;
   //
   //    std::cout << "Please specify whether to use inner iterations (1 = on, 0 = off | default = 0): ";
-  //    std::cin >> options.USE_INNER_ITERS;
+  //    std::cin >> options.USE_inner_iterations;
   //
   //    std::cout << "Please specify whether to use automatic derivatives (1 = on, 0 = off | default = 0): ";
-  //    std::cin >> options.USE_AUTO_DIFF;
+  //    std::cin >> options.USE_auto_differentation;
   //
   //    std::cout << "Please specify whether to use PCA-mode (1 = on, 0 = off | default = 0): ";
   //    std::cin >> options.USE_PCA;
@@ -209,8 +244,8 @@ void outputCommands() {
   
   std::cout << std::endl;
   
-  std::cout << "--use_inner_iters[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
-  std::cout << "--use_auto_diff[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
+  std::cout << "--use_inner_iterations[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
+  std::cout << "--use_auto_differentation[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
   std::cout << "--use_pca[=<bool>]: Specify whether to use PCA formulation or not. (default = 0)" << std::endl;
   std::cout << "--eliminate_u_first[=<bool>]: Specify whether to eliminate U first or V first. (default = 0)" << std::endl;
   

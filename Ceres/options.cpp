@@ -19,12 +19,24 @@ void options::reset() {
   sqrt_nu = 0.0;              // Square root of the regularization parameter
   func_tol = 1.0e-9;          // Function value tolerance
   
+  // Existing Ceres options
   use_jacobi_scaling = false; // Set Jacobi scaling.
-  use_inner_iters = false;    // Set inner iterations.
-  use_auto_diff = false;      // Set auto-differential cost function.
+  use_inner_iterations = false;    // Set inner iterations.
+  use_auto_differentiation = false;      // Set auto-differential cost function.
+  eliminate_u_first = false;  // Determine the order of elimination.
+  
+  // New Ceres options
+  use_levenberg_damping = false;
+  use_traditional_damping_update = false;
+  use_rw2_for_inner_iterations = false;
+  use_linear_inner_iterations = false;
+  use_inner_iterations_for_v_only = false;
+  use_block_qr_for_rw2 = false;
+  initialize_with_inner_iteration = false;
+  
+  // Other
   use_pca = false;            // Set PCA-mode: M -> U * V' + t * 1'.
   display = true;             // Turn on/off per-iteration display.
-  eliminate_u_first = false;  // Determine the order of elimination.
   debug = false;              // Turn on/off debug information.
   help = false;               // Show help.
 }
