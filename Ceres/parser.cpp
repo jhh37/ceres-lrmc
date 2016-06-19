@@ -27,13 +27,13 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       // Parse dataset.
       if (argType == "-d" || argType == "--dataset") {
         options.dataset = arg;
-      } else if (argType == "-f" || argType == "--folder") {
+      } else if (argType == "-p" || argType == "--path") {
         options.folder = arg;
         // Parse the number of rows.
-      } else if (argType == "-m" || argType == "--rows") {
+      } else if (argType == "-m" || argType == "--num_rows") {
         options.m = atoi(arg.c_str());
         // Parse the number of columns.
-      } else if (argType == "-n" || argType == "--cols") {
+      } else if (argType == "-n" || argType == "--num_cols") {
         options.n = atoi(arg.c_str());
         // Parse rank.
       } else if (argType == "-r" || argType == "--rank") {
@@ -42,10 +42,10 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       } else if (argType == "-t" || argType == "--func_tol") {
         options.tol = std::strtod(arg.c_str(), NULL);
         // Parse the maximum number of iterations.
-      } else if (argType == "-i" || argType == "--max_iter") {
+      } else if (argType == "-i" || argType == "--max_eval") {
         options.max_iter = atoi(arg.c_str());
-        // Parse the number of processors used.
-      } else if (argType == "--nproc") {
+        // Parse the number of threads used.
+      } else if (argType == "--num_threads") {
         options.nproc = atoi(arg.c_str());
         // Parse the square root of the regularization parameter.
       } else if (argType == "--nu") {
@@ -59,19 +59,19 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         }
 
         // Parse whether to use Jacobi scaling in CERES.
-      } else if (argType == "--use-jacobi-scaling") {
+      } else if (argType == "--use_jacobi_scaling") {
         options.USE_JACOBI_SCALING = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use inner iterations in CERES.
-      } else if (argType == "--use-inner-iters") {
+      } else if (argType == "--use_inner_iterations") {
         options.USE_INNER_ITERS = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use automatic derivatives in CERES.
-      } else if (argType == "--use-auto-diff") {
+      } else if (argType == "--use_auto_differentiation") {
         options.USE_AUTO_DIFF = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to use PCA formulation in CERES.
-      } else if (argType == "--use-pca") {
+      } else if (argType == "--use_pca") {
         options.USE_PCA = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // If PCA is used, make the regularization parameter 0.
@@ -82,7 +82,7 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
         options.DISPLAY = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to eliminate U first or not
-      } else if (argType == "--eliminate-u-first") {
+      } else if (argType == "--eliminate_u_first") {
         options.ELIMINATE_U_FIRST = atoi(arg.c_str()) > 0 || (arg == argType);
         
         // Parse whether to output debug infos.
@@ -194,25 +194,25 @@ void outputCommands() {
   
   std::cout << "[ Dataset-related ]" << std::endl;
   std::cout << "-d=<string>, --dataset=<string>: Read dataset from <name>_r<rank>_{M, W, U0, V0}.bin." << std::endl;
-  std::cout << "-f=<string>, --folder=<string>: Set the name of the folder." << std::endl;
-  std::cout << "-m=<int>, --rows=<int>: Set the number of rows." << std::endl;
-  std::cout << "-n=<int>, --cols=<int>: Set the number of columns." << std::endl;
+  std::cout << "-p=<string>, --path=<string>: Set the name of the folder." << std::endl;
+  std::cout << "-m=<int>, --num_rows=<int>: Set the number of rows." << std::endl;
+  std::cout << "-n=<int>, --num_cols=<int>: Set the number of columns." << std::endl;
   std::cout << "-r=<int>, --rank=<int>: Set the proposed rank." << std::endl;
   
   std::cout << std::endl;
   
   std::cout << "[ Solver-related ]" << std::endl;
   std::cout << "-t=<double>, --func_tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
-  std::cout << "-i=<int>, --max_iter=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
+  std::cout << "-i=<int>, --max_eval=<double>: Set the maximum number of evaluations. (default = 300)" << std::endl;
   std::cout << "--nu=<double>: Set regularization parameter nu. (default = 0.0)" << std::endl;
-  std::cout << "--nproc=<double>: Set the number of CPUs for the solver. (default = 1)" << std::endl;
+  std::cout << "--num_threads=<double>: Set the number of threads for the solver. (default = 1)" << std::endl;
   
   std::cout << std::endl;
   
-  std::cout << "--use-inner-iters[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
-  std::cout << "--use-auto-diff[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
-  std::cout << "--use-pca[=<bool>]: Specify whether to use PCA formulation or not. (default = 0)" << std::endl;
-  std::cout << "--eliminate-u-first[=<bool>]: Specify whether to eliminate U first or V first. (default = 0)" << std::endl;
+  std::cout << "--use_inner_iterations[=<bool>]: Specify whether to use inner iterations or not. (default = 0)" << std::endl;
+  std::cout << "--use_auto_differentiation[=<bool>]: Specify whether to use automatic derivatives or not. (default = 0)" << std::endl;
+  std::cout << "--use_pca[=<bool>]: Specify whether to use PCA formulation or not. (default = 0)" << std::endl;
+  std::cout << "--eliminate_u_first[=<bool>]: Specify whether to eliminate U first or V first. (default = 0)" << std::endl;
   
   std::cout << std::endl;
   
