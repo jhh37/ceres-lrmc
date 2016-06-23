@@ -13,7 +13,7 @@ void options::reset() {
   num_rows = 0;
   num_cols = 0;
   rank = 0;
-  max_eval = 300;             // Maximum number of evaluations
+  max_num_iterations = 300;             // Maximum number of evaluations
   num_threads = 1;            // Number of threads to be used
   
   sqrt_nu = 0.0;              // Square root of the regularization parameter

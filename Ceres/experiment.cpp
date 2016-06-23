@@ -109,7 +109,7 @@ void runExperiment(options_t options) {
   // Existing Ceres options
   ceres::Solver::Options ce_opts;
   ce_opts.minimizer_progress_to_stdout = options.display;
-  ce_opts.max_num_iterations = options.max_eval;
+  ce_opts.max_num_iterations = options.max_num_iterations;
   ce_opts.function_tolerance = options.func_tol;
   ce_opts.check_gradients = false;
   ce_opts.jacobi_scaling = options.use_jacobi_scaling;
@@ -125,33 +125,33 @@ void runExperiment(options_t options) {
   ce_opts.linear_solver_ordering.reset(new ceres::ParameterBlockOrdering);
   
   // New Ceres options
-  if (options.use_levenberg_damping) {
-    ce_opts.lm_damping_type = ceres::LEVENBERG;
-  } else {
-    ce_opts.lm_damping_type = ceres::MARQUARDT;
-  }
-  if (options.use_traditional_damping_update) {
-    ce_opts.trust_region_radius_update_type =
-        ceres::TRADITIONAL_UPDATE;
-  } else {
-    ce_opts.trust_region_radius_update_type =
-        ceres::TRUST_REGION_UPDATE;
-  }
-  if (options.use_rw2_for_inner_iterations) {
-    ce_opts.inner_iteration_type =
-        ceres::RUHE_WEDIN_ALGORITHM_2;
-  } else {
-    ce_opts.inner_iteration_type =
-        ceres::EMBEDDED_POINT_ITERATION;
-  }
-  ce_opts.use_linear_inner_iterations =
-    options.use_linear_inner_iterations;
-  ce_opts.use_inner_iterations_for_eliminated_parameters_only =
-      options.use_inner_iterations_for_v_only;
-  ce_opts.use_block_qr_for_rw2 =
-      options.use_block_qr_for_rw2;
-  ce_opts.initialize_with_inner_iteration =
-      options.initialize_with_inner_iteration;
+//  if (options.use_levenberg_damping) {
+//    ce_opts.lm_damping_type = ceres::LEVENBERG;
+//  } else {
+//    ce_opts.lm_damping_type = ceres::MARQUARDT;
+//  }
+//  if (options.use_traditional_damping_update) {
+//    ce_opts.trust_region_radius_update_type =
+//        ceres::TRADITIONAL_UPDATE;
+//  } else {
+//    ce_opts.trust_region_radius_update_type =
+//        ceres::TRUST_REGION_UPDATE;
+//  }
+//  if (options.use_rw2_for_inner_iterations) {
+//    ce_opts.inner_iteration_type =
+//        ceres::RUHE_WEDIN_ALGORITHM_2;
+//  } else {
+//    ce_opts.inner_iteration_type =
+//        ceres::EMBEDDED_POINT_ITERATION;
+//  }
+//  ce_opts.use_linear_inner_iterations =
+//    options.use_linear_inner_iterations;
+//  ce_opts.use_inner_iterations_for_eliminated_parameters_only =
+//      options.use_inner_iterations_for_v_only;
+//  ce_opts.use_block_qr_for_rw2 =
+//      options.use_block_qr_for_rw2;
+//  ce_opts.initialize_with_inner_iteration =
+//      options.initialize_with_inner_iteration;
 
 
   // Ordering depends on the input ELIMINATE_U_FIRST.

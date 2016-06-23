@@ -13,7 +13,7 @@ typedef struct options {
               num_rows(0),
               num_cols(0),
               rank(0),
-              max_eval(300),
+              max_num_iterations(300),
               num_threads(1),
               sqrt_nu(0.0),
               func_tol(1.0e-9),
@@ -44,7 +44,7 @@ typedef struct options {
   int num_rows;
   int num_cols;
   int rank;
-  int max_eval;             // Maximum number of evaluations
+  int max_num_iterations;   // Maximum number of evaluations
   int num_threads;          // Number of processors to be used
 
   double sqrt_nu;           // Square root of the regularization parameter

@@ -42,8 +42,8 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       } else if (argType == "-t" || argType == "--func_tol") {
         options.func_tol = std::strtod(arg.c_str(), NULL);
         // Parse the maximum number of iterations.
-      } else if (argType == "-i" || argType == "--max_eval") {
-        options.max_eval = atoi(arg.c_str());
+      } else if (argType == "-i" || argType == "--max_num_iterations") {
+        options.max_num_iterations = atoi(arg.c_str());
         // Parse the number of threads used.
       } else if (argType == "--num_threads") {
         options.num_threads = atoi(arg.c_str());
@@ -140,7 +140,7 @@ void parseOptionsFromArgs(int argc, char* argv[], options_t &options) {
       std::cout << "3. Size: " << options.num_rows << " x " << options.num_cols << std::endl;
       std::cout << "4. Rank: " << options.rank << std::endl;
       std::cout << "5. Function tolerance: " << options.func_tol << std::endl;
-      std::cout << "6. Max. no. of evaluations: " << options.max_eval << std::endl;
+      std::cout << "6. Max. no. of evaluations: " << options.max_num_iterations << std::endl;
       std::cout << "7. Number of threads: " << options.num_threads << std::endl << std::endl;
       std::cout << "8. Sqrt(nu) = " << options.sqrt_nu << std::endl << std::endl;
       std::cout << "9. use_inner_iterations: " << options.use_inner_iterations << std::endl;
@@ -238,7 +238,7 @@ void outputCommands() {
   
   std::cout << "[ Solver-related ]" << std::endl;
   std::cout << "-t=<double>, --func_tol=<double>: Set the function tolerance. (default = 1e-10)" << std::endl;
-  std::cout << "-i=<int>, --max_eval=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
+  std::cout << "-i=<int>, --max_num_iterations=<double>: Set the maximum number of iterations. (default = 2000)" << std::endl;
   std::cout << "--nu=<double>: Set regularization parameter nu. (default = 0.0)" << std::endl;
   std::cout << "--num_threads=<double>: Set the number of threads for the solver. (default = 1)" << std::endl;
   
