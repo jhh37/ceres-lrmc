@@ -125,33 +125,31 @@ void runExperiment(options_t options) {
   ce_opts.linear_solver_ordering.reset(new ceres::ParameterBlockOrdering);
   
   // New Ceres options
-//  if (options.use_levenberg_damping) {
-//    ce_opts.lm_damping_type = ceres::LEVENBERG;
-//  } else {
-//    ce_opts.lm_damping_type = ceres::MARQUARDT;
-//  }
-//  if (options.use_traditional_damping_update) {
-//    ce_opts.trust_region_radius_update_type =
-//        ceres::TRADITIONAL_UPDATE;
-//  } else {
-//    ce_opts.trust_region_radius_update_type =
-//        ceres::TRUST_REGION_UPDATE;
-//  }
-//  if (options.use_rw2_for_inner_iterations) {
-//    ce_opts.inner_iteration_type =
-//        ceres::RUHE_WEDIN_ALGORITHM_2;
-//  } else {
-//    ce_opts.inner_iteration_type =
-//        ceres::EMBEDDED_POINT_ITERATION;
-//  }
-//  ce_opts.use_linear_inner_iterations =
-//    options.use_linear_inner_iterations;
-//  ce_opts.use_inner_iterations_for_eliminated_parameters_only =
-//      options.use_inner_iterations_for_v_only;
-//  ce_opts.use_block_qr_for_rw2 =
-//      options.use_block_qr_for_rw2;
-//  ce_opts.initialize_with_inner_iteration =
-//      options.initialize_with_inner_iteration;
+  if (options.use_levenberg_damping) {
+    ce_opts.lm_damping_type = ceres::LEVENBERG;
+  } else {
+    ce_opts.lm_damping_type = ceres::MARQUARDT;
+  }
+  if (options.use_traditional_damping_update) {
+    ce_opts.trust_region_radius_update_type =
+        ceres::TRADITIONAL_UPDATE;
+  } else {
+    ce_opts.trust_region_radius_update_type =
+        ceres::TRUST_REGION_UPDATE;
+  }
+  if (options.use_rw2_for_inner_iterations) {
+    ce_opts.inner_iteration_type =
+        ceres::RUHE_WEDIN_ALGORITHM_2;
+  } else {
+    ce_opts.inner_iteration_type =
+        ceres::EMBEDDED_POINT_ITERATION;
+  }
+  ce_opts.use_linear_inner_iterations =
+    options.use_linear_inner_iterations;
+  ce_opts.use_block_qr_for_rw2 =
+      options.use_block_qr_for_rw2;
+  ce_opts.initialize_with_inner_iteration =
+      options.initialize_with_inner_iteration;
 
 
   // Ordering depends on the input ELIMINATE_U_FIRST.
@@ -167,12 +165,15 @@ void runExperiment(options_t options) {
     // Set the inner iteration ordering.
     ce_opts.inner_iteration_ordering.reset(new ceres::ParameterBlockOrdering);
 
-    // Ordering depends on the input ELIMINATE_U_FIRST.  
-    for (int i = 0; i < m; ++i) {
-      ce_opts.inner_iteration_ordering->AddElementToGroup(&(U[i*rt]), int(!options.eliminate_u_first));
-    }
-    for (int j = 0; j < n; ++j) {
-      ce_opts.inner_iteration_ordering->AddElementToGroup(&(V[j*r]), int(options.eliminate_u_first));
+    // Ordering depends on the input ELIMINATE_U_FIRST.
+    if (options.eliminate_u_first) {
+      for (int i = 0; i < m; ++i) {
+        ce_opts.inner_iteration_ordering->AddElementToGroup(&(U[i*rt]), int(!options.eliminate_u_first));
+      }
+    } else {
+      for (int j = 0; j < n; ++j) {
+        ce_opts.inner_iteration_ordering->AddElementToGroup(&(V[j*r]), int(options.eliminate_u_first));
+      }
     }
   }
 
